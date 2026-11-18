@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Answer Sheet Generator Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+    radial-gradient(circle at top left,#2563eb33,transparent 30%),
+    radial-gradient(circle at bottom right,#7c3aed33,transparent 30%),
+    linear-gradient(135deg,#0f172a,#111827,#020617);
+    color:white;
+    display:flex;
+    flex-direction:column;
+}
+
+/* LOGIN PAGE */
+#loginPage{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.login-box{
+    width:100%;
+    max-width:400px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.12);
+    backdrop-filter:blur(16px);
+    border-radius:24px;
+    padding:38px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.login-title{
+    font-size:34px;
+    font-family:'Orbitron',sans-serif;
+    margin-bottom:25px;
+    color:#22d3ee;
+    text-shadow:0 0 12px rgba(34,211,238,0.5);
+}
+
+.login-input{
+    width:100%;
+    padding:14px;
+    margin-bottom:16px;
+    border:none;
+    outline:none;
+    border-radius:14px;
+    background:rgba(255,255,255,0.12);
+    color:white;
+    border:1px solid rgba(255,255,255,0.08);
+    font-size:15px;
+}
+
+.login-input::placeholder{
+    color:#cbd5e1;
+}
+
+.login-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:600;
+    color:white;
+    background:linear-gradient(135deg,#06b6d4,#7c3aed);
+    transition:0.3s;
+}
+
+.login-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(6,182,212,0.4);
+}
+
+.error-msg{
+    display:none;
+    margin-top:14px;
+    color:#fda4af;
+    font-size:14px;
+}
+
+/* MAIN DASHBOARD */
+#appContainer{
+    display:none;
+    flex:1;
+    padding:25px;
+    max-width:1180px;
+    width:100%;
+    margin:0 auto;
+}
+
+/* TOP BAR & MAIN TABS */
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:25px;
+    background:rgba(255,255,255,0.06);
+    padding:16px 24px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+.main-tabs{
+    display:flex;
+    gap:12px;
+}
+
+.tab-btn{
+    padding:12px 24px;
+    border:none;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    background:rgba(255,255,255,0.08);
+    color:#cbd5e1;
+    transition:0.3s;
+}
+
+.tab-btn.active{
+    background:linear-gradient(135deg,#06b6d4,#7c3aed);
+    color:white;
+    box-shadow:0 4px 15px rgba(124,58,237,0.4);
+}
+
+.logout-btn{
+    padding:10px 18px;
+    border:1px solid rgba(239,68,68,0.4);
+    border-radius:12px;
+    background:rgba(239,68,68,0.15);
+    color:#fca5a5;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.logout-btn:hover{
+    background:#ef4444;
+    color:white;
+}
+
+/* SUB TABS */
+.sub-tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:22px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    padding-bottom:14px;
+}
+
+.sub-tab-btn{
+    padding:10px 20px;
+    border:none;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    background:rgba(255,255,255,0.06);
+    color:#94a3b8;
+    transition:0.2s;
+}
+
+.sub-tab-btn.active{
+    background:rgba(34,211,238,0.2);
+    color:#22d3ee;
+    border:1px solid rgba(34,211,238,0.4);
+}
+
+/* PANEL CONTAINER */
+.panel{
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(16px);
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.35);
+}
+
+.section-title{
+    text-align:center;
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:24px;
+}
+
+.coding-heading{
+    font-family:'Orbitron',sans-serif;
+    color:#22d3ee;
+    text-shadow:0 0 10px rgba(34,211,238,0.4);
+}
+
+.crt-heading{
+    background:linear-gradient(90deg,#60a5fa,#c084fc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+/* FORM CONTROLS */
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+    color:#e2e8f0;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select{
+    width:100%;
+    padding:14px;
+    border:none;
+    outline:none;
+    border-radius:14px;
+    background:rgba(255,255,255,0.1);
+    color:white;
+    font-size:15px;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+select{
+    background:#1e293b;
+    cursor:pointer;
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:#94a3b8;
+}
+
+button.action-btn{
+    padding:14px 22px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    color:white;
+    transition:0.25s;
+}
+
+button.action-btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-cyan{ background:#06b6d4; }
+.btn-purple{ background:#8b5cf6; }
+.btn-green{ background:#22c55e; }
+.btn-red{ background:#ef4444; }
+.btn-gradient{ background:linear-gradient(135deg,#2563eb,#7c3aed); width:100%; margin-top:12px; }
+
+/* CODING KEY SPECIFIC */
+.code-block{
+    margin-top:20px;
+    padding:20px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.code-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.code-top h2{
+    color:#facc15;
+    font-size:20px;
+}
+
+.code-textarea{
+    min-height:200px;
+    resize:vertical;
+    font-family:Consolas, monospace;
+    white-space:pre;
+    tab-size:4;
+    line-height:1.5;
+}
+
+.button-group{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-top:24px;
+}
+
+/* CRT KEY SPECIFIC */
+.question-box{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+    gap:12px;
+    margin-top:20px;
+}
+
+.option-card,
+.add-card{
+    position:relative;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.08);
+    padding:10px;
+    border-radius:14px;
+    min-height:95px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.card-delete-btn{
+    position:absolute;
+    top:6px;
+    right:8px;
+    width:22px;
+    height:22px;
+    border:none;
+    border-radius:50%;
+    background:#ef4444;
+    color:white;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.add-card{
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    border:2px dashed rgba(255,255,255,0.25);
+}
+
+.plus-icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:700;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+}
+
+.add-text{
+    margin-top:6px;
+    font-size:12px;
+    font-weight:600;
+}
+
+/* CRT PREVIEW */
+.preview{
+    margin-top:28px;
+    background:linear-gradient(135deg,#eff6ff,#f5f3ff);
+    color:#111827;
+    border-radius:20px;
+    padding:24px;
+    display:none;
+}
+
+.sheet-header{
+    width:100%;
+    text-align:center;
+    margin-bottom:16px;
+}
+
+.sheet-title{
+    font-size:28px;
+    font-weight:700;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.header-text{
+    margin-top:6px;
+    font-weight:600;
+    color:#374151;
+}
+
+.qr-wrapper{
+    display:flex;
+    justify-content:center;
+    margin:18px 0;
+}
+
+.note{
+    text-align:center;
+    background:linear-gradient(135deg,#eff6ff,#f5f3ff);
+    color:#be123c;
+    border:1px solid #fecdd3;
+    padding:14px;
+    border-radius:14px;
+    margin:18px 0;
+    font-size:13px;
+    font-weight:600;
+    word-wrap:break-word;
+}
+
+.answers-grid{
+    display:grid;
+    gap:14px;
+    justify-content:center;
+}
+
+.answer-table{
+    border-collapse:collapse;
+    margin:auto;
+    overflow:hidden;
+    border-radius:12px;
+    background:white;
+    box-shadow:0 5px 14px rgba(0,0,0,0.08);
+}
+
+.answer-table td{
+    border:1px solid #dbeafe;
+    width:30px;
+    height:22px;
+    text-align:center;
+    font-size:11px;
+    font-weight:700;
+    background:white;
+}
+
+.answer-table td:first-child{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+/* HISTORY LIST */
+.history-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:18px;
+    margin-top:15px;
+}
+
+.history-card{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:18px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:16px;
+    transition:0.2s;
+}
+
+.history-card:hover{
+    border-color:rgba(34,211,238,0.4);
+    transform:translateY(-2px);
+}
+
+.history-exam-code{
+    font-size:20px;
+    font-weight:700;
+    color:#38bdf8;
+    word-break:break-all;
+}
+
+.history-date{
+    font-size:12px;
+    color:#94a3b8;
+    margin-top:4px;
+    font-weight:400;
+}
+
+.history-subtitle{
+    font-size:13px;
+    color:#cbd5e1;
+    margin-top:8px;
+}
+
+.history-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.hist-btn{
+    flex:1;
+    padding:8px 12px;
+    border:none;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+    text-align:center;
+    transition:0.2s;
+}
+
+.hist-view{ background:#0284c7; }
+.hist-edit{ background:#7c3aed; }
+.hist-del{ background:#dc2626; }
+
+.hist-btn:hover{
+    opacity:0.9;
+}
+
+.empty-history{
+    text-align:center;
+    padding:40px 20px;
+    color:#94a3b8;
+    font-size:15px;
+}
+
+/* VIEW MODAL */
+.modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    backdrop-filter:blur(6px);
+    z-index:1000;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal-box{
+    width:100%;
+    max-width:1050px;
+    height:88vh;
+    background:#0f172a;
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 22px;
+    background:#1e293b;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.modal-header h3{
+    font-size:16px;
+    color:#38bdf8;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+}
+
+.modal-iframe{
+    flex:1;
+    width:100%;
+    border:none;
+    background:white;
+}
+
+/* INTERACTIVE FOOTER */
+footer{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    margin-top:auto;
+}
+
+.footer-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 22px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    font-size:13.5px;
+    color:#cbd5e1;
+    cursor:pointer;
+    user-select:none;
+    transition:all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-pill:hover{
+    transform:translateY(-3px);
+    background:rgba(34,211,238,0.1);
+    border-color:rgba(34,211,238,0.45);
+    box-shadow:0 8px 24px rgba(34,211,238,0.18);
+    color:#ffffff;
+}
+
+.copyright-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#06b6d4,#7c3aed);
+    color:white;
+    font-size:13px;
+    font-weight:700;
+    transition:transform 0.5s ease;
+}
+
+.footer-pill:hover .copyright-badge{
+    transform:rotate(360deg) scale(1.1);
+}
+
+.footer-author{
+    font-weight:600;
+    background:linear-gradient(90deg,#38bdf8,#c084fc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+    <div class="login-box">
+        <h1 class="login-title">LOGIN</h1>
+        <input type="text" id="loginUserId" class="login-input" placeholder="Enter ID">
+        <input type="password" id="loginPassword" class="login-input" placeholder="Enter Password">
+        <button class="login-btn" onclick="handleLogin()">Login</button>
+        <div class="error-msg" id="loginError">Invalid ID or Password</div>
+    </div>
+</div>
+
+<!-- MAIN APP CONTAINER -->
+<div id="appContainer">
+    <div class="top-header">
+        <div class="main-tabs">
+            <button class="tab-btn active" id="tabCodingBtn" onclick="switchMainTab('coding')">Coding Key</button>
+            <button class="tab-btn" id="tabCrtBtn" onclick="switchMainTab('crt')">CRT Key</button>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+
+    <!-- ==================== CODING KEY SECTION ==================== -->
+    <div id="codingSection" class="panel">
+        <div class="sub-tabs">
+            <button class="sub-tab-btn active" id="codingCreateSubBtn" onclick="switchSubTab('coding', 'create')">Create Key</button>
+            <button class="sub-tab-btn" id="codingHistorySubBtn" onclick="switchSubTab('coding', 'history')">History</button>
+        </div>
+
+        <!-- CODING: CREATE KEY -->
+        <div id="codingCreateView">
+            <h1 class="section-title coding-heading">Coding Answer Sheet Generator</h1>
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="codingTitle" placeholder="Enter Title">
+            </div>
+
+            <div class="form-group">
+                <label>Exam Code</label>
+                <input type="text" id="codingExamCode" placeholder="Enter Exam Code">
+            </div>
+
+            <div class="form-group">
+                <label>Disclaimer / Note (Optional)</label>
+                <textarea id="codingDisclaimer" rows="2" placeholder="Enter Disclaimer or Note (optional)"></textarea>
+            </div>
+
+            <div id="codingBlocksContainer"></div>
+
+            <div class="button-group">
+                <button class="action-btn btn-cyan" onclick="addCodingBlock()">Add Question</button>
+                <button class="action-btn btn-purple" onclick="submitCodingKey()">Submit & Save to History</button>
+                <button class="action-btn btn-green" id="codingDownloadBtn" style="display:none;" onclick="downloadCodingHTML()">Download Answer Sheet</button>
+            </div>
+        </div>
+
+        <!-- CODING: HISTORY -->
+        <div id="codingHistoryView" style="display:none;">
+            <h1 class="section-title coding-heading">Coding Key History</h1>
+            <div id="codingHistoryList" class="history-grid"></div>
+        </div>
+    </div>
+
+    <!-- ==================== CRT KEY SECTION ==================== -->
+    <div id="crtSection" class="panel" style="display:none;">
+        <div class="sub-tabs">
+            <button class="sub-tab-btn active" id="crtCreateSubBtn" onclick="switchSubTab('crt', 'create')">Create Key</button>
+            <button class="sub-tab-btn" id="crtHistorySubBtn" onclick="switchSubTab('crt', 'history')">History</button>
+        </div>
+
+        <!-- CRT: CREATE KEY -->
+        <div id="crtCreateView">
+            <h1 class="section-title crt-heading">CRT Answer Sheet Generator</h1>
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="crtTitle" value="SUNDAY CRT EXAM">
+            </div>
+
+            <div class="form-group">
+                <label>Exam Code</label>
+                <input type="text" id="crtExamCode" placeholder="Enter Exam Code">
+            </div>
+
+            <div class="form-group" id="crtCountGroup">
+                <label>Number of Questions</label>
+                <input type="number" id="crtQuestionCount" placeholder="Enter Number of Questions">
+                <button class="action-btn btn-gradient" id="crtGenInputsBtn" onclick="generateCrtInputs()">Generate Question Inputs</button>
+            </div>
+
+            <div id="crtQuestionInputs" class="question-box"></div>
+
+            <div class="form-group" style="margin-top:22px;">
+                <label>Disclaimer / Warning / Note</label>
+                <textarea id="crtNote" rows="3" placeholder="Enter Disclaimer, Warning, or Note">Marks: 50/50<br>
+Note: It is preferable to answer 42 to 45 questions correctly rather than attempting all 50.</textarea>
+            </div>
+
+            <button class="action-btn btn-gradient" onclick="generateCrtSheet()">Generate Answer Sheet & Save to History</button>
+            <button class="action-btn btn-gradient" onclick="downloadCrtHTML()">Download Answer Sheet</button>
+
+            <div id="crtPreview" class="preview"></div>
+        </div>
+
+        <!-- CRT: HISTORY -->
+        <div id="crtHistoryView" style="display:none;">
+            <h1 class="section-title crt-heading">CRT Key History</h1>
+            <div id="crtHistoryList" class="history-grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- VIEW MODAL -->
+<div class="modal-overlay" id="viewModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">Preview Answer Sheet</h3>
+            <div class="modal-actions">
+                <button class="hist-btn hist-view" id="modalDownloadBtn" style="padding:8px 16px;">Download HTML</button>
+                <button class="hist-btn hist-del" onclick="closeModal()" style="padding:8px 16px;">Close</button>
+            </div>
+        </div>
+        <iframe id="modalIframe" class="modal-iframe"></iframe>
+    </div>
+</div>
+
+<!-- INTERACTIVE FOOTER -->
+<footer>
+    <div class="footer-pill" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Back to top">
+        <span class="copyright-badge">&copy;</span>
+        <span><span id="copyrightYear"></span> <span class="footer-author">Shanmukh Nallamilli</span> &bull; All rights reserved</span>
+    </div>
+</footer>
+
+<script>
+// Set dynamic footer year
+document.getElementById("copyrightYear").innerText = new Date().getFullYear();
+
+// ==================== AUTHENTICATION ====================
+const VALID_ID = "shanmukh";
+const VALID_PASS = "Shanmukh@1";
+
+function handleLogin(){
+    const id = document.getElementById("loginUserId").value.trim();
+    const pass = document.getElementById("loginPassword").value.trim();
+
+    if(id === VALID_ID && pass === VALID_PASS){
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("appContainer").style.display = "block";
+        document.getElementById("loginError").style.display = "none";
+        sessionStorage.setItem("isLoggedIn", "true");
+    } else {
+        document.getElementById("loginError").style.display = "block";
+    }
+}
+
+function handleLogout(){
+    sessionStorage.removeItem("isLoggedIn");
+    document.getElementById("appContainer").style.display = "none";
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("loginPassword").value = "";
+}
+
+document.getElementById("loginPassword").addEventListener("keydown", function(e){
+    if(e.key === "Enter") handleLogin();
+});
+
+if(sessionStorage.getItem("isLoggedIn") === "true"){
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("appContainer").style.display = "block";
+}
+
+// ==================== NAVIGATION TABS ====================
+function switchMainTab(tab){
+    const codingSection = document.getElementById("codingSection");
+    const crtSection = document.getElementById("crtSection");
+    const tabCodingBtn = document.getElementById("tabCodingBtn");
+    const tabCrtBtn = document.getElementById("tabCrtBtn");
+
+    if(tab === "coding"){
+        codingSection.style.display = "block";
+        crtSection.style.display = "none";
+        tabCodingBtn.classList.add("active");
+        tabCrtBtn.classList.remove("active");
+    } else {
+        codingSection.style.display = "none";
+        crtSection.style.display = "block";
+        tabCodingBtn.classList.remove("active");
+        tabCrtBtn.classList.add("active");
+    }
+}
+
+function switchSubTab(section, subTab){
+    if(section === "coding"){
+        document.getElementById("codingCreateView").style.display = subTab === "create" ? "block" : "none";
+        document.getElementById("codingHistoryView").style.display = subTab === "history" ? "block" : "none";
+        document.getElementById("codingCreateSubBtn").classList.toggle("active", subTab === "create");
+        document.getElementById("codingHistorySubBtn").classList.toggle("active", subTab === "history");
+        if(subTab === "history") renderCodingHistory();
+    } else {
+        document.getElementById("crtCreateView").style.display = subTab === "create" ? "block" : "none";
+        document.getElementById("crtHistoryView").style.display = subTab === "history" ? "block" : "none";
+        document.getElementById("crtCreateSubBtn").classList.toggle("active", subTab === "create");
+        document.getElementById("crtHistorySubBtn").classList.toggle("active", subTab === "history");
+        if(subTab === "history") renderCrtHistory();
+    }
+}
+
+// ==================== STORAGE HELPERS ====================
+const CODING_STORAGE_KEY = "shanmukh_coding_history_v1";
+const CRT_STORAGE_KEY = "shanmukh_crt_history_v1";
+
+function getHistory(key){
+    try {
+        return JSON.parse(localStorage.getItem(key)) || [];
+    } catch(e) {
+        return [];
+    }
+}
+
+function saveHistory(key, list){
+    localStorage.setItem(key, JSON.stringify(list));
+}
+
+function escapeHTML(value){
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function triggerFileDownload(filename, htmlContent){
+    const blob = new Blob([htmlContent], {type:"text/html"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// ==================== MODAL VIEWER ====================
+function openViewModal(examCode, htmlContent){
+    document.getElementById("modalTitle").innerText = "Viewing: " + examCode;
+    const iframe = document.getElementById("modalIframe");
+    iframe.srcdoc = htmlContent;
+    document.getElementById("modalDownloadBtn").onclick = function(){
+        triggerFileDownload(examCode + ".html", htmlContent);
+    };
+    document.getElementById("viewModal").style.display = "flex";
+}
+
+function closeModal(){
+    document.getElementById("viewModal").style.display = "none";
+    document.getElementById("modalIframe").srcdoc = "";
+}
+
+// ==================== CODING KEY LOGIC ====================
+let codingBlockCounter = 0;
+let editingCodingId = null;
+
+function addCodingBlock(prefillLang = "", prefillCode = ""){
+    codingBlockCounter++;
+    const container = document.getElementById("codingBlocksContainer");
+    const div = document.createElement("div");
+    div.className = "code-block";
+    div.id = "codingBlock_" + codingBlockCounter;
+
+    div.innerHTML = `
+        <div class="code-top">
+            <div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+                <h2>Question 1</h2>
+                <select style="width:auto;min-width:160px;padding:10px 14px;">
+                    <option value="">Select Language</option>
+                    <option value="C" ${prefillLang === "C" ? "selected" : ""}>C</option>
+                    <option value="Python" ${prefillLang === "Python" ? "selected" : ""}>Python</option>
+                    <option value="C++" ${prefillLang === "C++" ? "selected" : ""}>C++</option>
+                    <option value="Java" ${prefillLang === "Java" ? "selected" : ""}>Java</option>
+                </select>
+            </div>
+            <button type="button" class="action-btn btn-red" style="padding:10px 16px;" onclick="deleteCodingBlock('codingBlock_${codingBlockCounter}')">
+                Delete
+            </button>
+        </div>
+        <textarea class="code-textarea" placeholder="Enter Code">${escapeHTML(prefillCode)}</textarea>
+    `;
+
+    container.appendChild(div);
+    updateCodingQuestionNumbers();
+}
+
+function deleteCodingBlock(blockId){
+    const block = document.getElementById(blockId);
+    if(block) block.remove();
+    updateCodingQuestionNumbers();
+}
+
+function updateCodingQuestionNumbers(){
+    const blocks = document.querySelectorAll("#codingBlocksContainer .code-block");
+    blocks.forEach((block, index) => {
+        block.querySelector("h2").innerText = "Question " + (index + 1);
+    });
+}
+
+function buildCodingHTMLString(title, examCode, disclaimer, dateStr, questionsList){
+    const encoded = encodeURIComponent(examCode);
+    const qrURL = "https://quickchart.io/qr?text=" + encoded + "&size=220";
+
+    let questionsHTML = "";
+    questionsList.forEach((item, index) => {
+        questionsHTML += `
+        <div class="question">
+            <div class="code-header">
+                <div class="question-title">
+                    <h2>Question ${index + 1}</h2>
+                    <span class="language">${escapeHTML(item.language)}</span>
+                </div>
+                <button class="copy-btn" onclick="copyCode('code${index}',this)">Copy</button>
+            </div>
+            <pre id="code${index}">${escapeHTML(item.code)}</pre>
+        </div>`;
+    });
+
+    const disclaimerBlock = disclaimer.trim()
+        ? `<div class="disclaimer-box">${escapeHTML(disclaimer).replace(/\n/g, "<br>")}</div>`
+        : "";
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHTML(examCode)}</title>
+<style>
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:40px;
+    max-width:1100px;
+    margin:auto;
+}
+h1{
+    text-align:center;
+    color:#38bdf8;
+    margin-bottom:25px;
+}
+.exam-info{
+    background:#111827;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:25px;
+}
+.exam-code{
+    font-size:20px;
+    margin-bottom:15px;
+}
+.disclaimer-box{
+    background:rgba(244,63,94,0.12);
+    border:1px solid #f43f5e;
+    color:#fda4af;
+    padding:14px;
+    border-radius:12px;
+    margin-top:15px;
+    font-size:14px;
+    line-height:1.5;
+}
+.qr{
+    text-align:center;
+    margin-top:18px;
+}
+.qr img{
+    width:180px;
+    height:180px;
+    background:white;
+    padding:8px;
+    border-radius:12px;
+}
+.question{
+    margin-top:35px;
+}
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:10px;
+}
+.question-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.question-title h2{
+    margin:0;
+}
+.language{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:8px;
+    background:#7c3aed;
+    color:white;
+    font-size:13px;
+    font-weight:bold;
+}
+.copy-btn{
+    background:#06b6d4;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+pre{
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+    overflow:auto;
+    white-space:pre-wrap;
+    margin-top:12px;
+    line-height:1.6;
+}
+</style>
+</head>
+<body>
+<h1>${escapeHTML(title)}</h1>
+<div class="exam-info">
+    <p><b>DATE:</b> ${escapeHTML(dateStr)}</p>
+    <p class="exam-code"><b>EXAM CODE:</b> ${escapeHTML(examCode)}</p>
+    ${disclaimerBlock}
+    <div class="qr">
+        <p><b>QR CODE</b></p>
+        <img src="${qrURL}" alt="QR Code for ${escapeHTML(examCode)}"
+             onerror="this.style.display='none';document.getElementById('qrFallback').style.display='block';">
+        <p id="qrFallback" style="display:none;">QR code could not be loaded. Exam Code: ${escapeHTML(examCode)}</p>
+    </div>
+</div>
+${questionsHTML}
+<script>
+function copyCode(id,btn){
+    const text = document.getElementById(id).innerText;
+    function done(){
+        btn.innerText = "Copied";
+        setTimeout(()=>{ btn.innerText = "Copy"; },1500);
+    }
+    function fallbackCopy(){
+        const textarea=document.createElement("textarea");
+        textarea.value=text;
+        textarea.style.position="fixed";
+        textarea.style.left="-9999px";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try{ document.execCommand("copy"); done(); }catch(e){ alert("Copy failed."); }
+        document.body.removeChild(textarea);
+    }
+    if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(done).catch(fallbackCopy);
+    }else{
+        fallbackCopy();
+    }
+}
+<\/script>
+</body>
+</html>`;
+}
+
+function validateAndCollectCodingData(){
+    const title = document.getElementById("codingTitle").value.trim();
+    const examCode = document.getElementById("codingExamCode").value.trim();
+    const disclaimer = document.getElementById("codingDisclaimer").value;
+    const blocks = document.querySelectorAll("#codingBlocksContainer .code-block");
+
+    if(!title){
+        alert("Please enter title");
+        document.getElementById("codingTitle").focus();
+        return null;
+    }
+    if(!examCode){
+        alert("Please enter exam code");
+        document.getElementById("codingExamCode").focus();
+        return null;
+    }
+    if(blocks.length === 0){
+        alert("Please add at least one question.");
+        return null;
+    }
+
+    const questionsList = [];
+    for(let i = 0; i < blocks.length; i++){
+        const select = blocks[i].querySelector("select");
+        const textarea = blocks[i].querySelector("textarea");
+
+        if(!select.value){
+            alert("Please select language for Question " + (i + 1));
+            select.focus();
+            return null;
+        }
+        if(!textarea.value.trim()){
+            alert("Please enter code for Question " + (i + 1));
+            textarea.focus();
+            return null;
+        }
+        questionsList.push({
+            language: select.value,
+            code: textarea.value
+        });
+    }
+
+    return { title, examCode, disclaimer, questionsList };
+}
+
+function submitCodingKey(){
+    const data = validateAndCollectCodingData();
+    if(!data) return;
+
+    const dateStr = new Date().toLocaleDateString();
+    const htmlContent = buildCodingHTMLString(data.title, data.examCode, data.disclaimer, dateStr, data.questionsList);
+
+    const history = getHistory(CODING_STORAGE_KEY);
+    const recordId = editingCodingId || Date.now().toString();
+    const existingIndex = history.findIndex(item => item.id === recordId);
+
+    const record = {
+        id: recordId,
+        examCode: data.examCode,
+        title: data.title,
+        disclaimer: data.disclaimer,
+        date: dateStr,
+        questions: data.questionsList,
+        html: htmlContent
+    };
+
+    if(existingIndex >= 0){
+        history[existingIndex] = record;
+    } else {
+        history.unshift(record);
+    }
+
+    saveHistory(CODING_STORAGE_KEY, history);
+    editingCodingId = recordId;
+    document.getElementById("codingDownloadBtn").style.display = "inline-block";
+    alert("Coding answer sheet saved to history!");
+}
+
+function downloadCodingHTML(){
+    const data = validateAndCollectCodingData();
+    if(!data) return;
+
+    const dateStr = new Date().toLocaleDateString();
+    const htmlContent = buildCodingHTMLString(data.title, data.examCode, data.disclaimer, dateStr, data.questionsList);
+    triggerFileDownload(data.examCode + ".html", htmlContent);
+}
+
+function renderCodingHistory(){
+    const container = document.getElementById("codingHistoryList");
+    const history = getHistory(CODING_STORAGE_KEY);
+
+    if(history.length === 0){
+        container.innerHTML = `<div class="empty-history" style="grid-column:1/-1;">No coding answer keys saved in history yet.</div>`;
+        return;
+    }
+
+    container.innerHTML = history.map(item => `
+        <div class="history-card">
+            <div>
+                <div class="history-exam-code">${escapeHTML(item.examCode)}</div>
+                <div class="history-date">${escapeHTML(item.date)}</div>
+                <div class="history-subtitle">${escapeHTML(item.title)} (${item.questions.length} Qs)</div>
+            </div>
+            <div class="history-actions">
+                <button class="hist-btn hist-view" onclick="viewCodingHistoryItem('${item.id}')">View</button>
+                <button class="hist-btn hist-edit" onclick="editCodingHistoryItem('${item.id}')">Edit</button>
+                <button class="hist-btn hist-del" onclick="deleteCodingHistoryItem('${item.id}')">Delete</button>
+            </div>
+        </div>
+    `).join("");
+}
+
+function viewCodingHistoryItem(id){
+    const item = getHistory(CODING_STORAGE_KEY).find(x => x.id === id);
+    if(item) openViewModal(item.examCode, item.html);
+}
+
+function editCodingHistoryItem(id){
+    const item = getHistory(CODING_STORAGE_KEY).find(x => x.id === id);
+    if(!item) return;
+
+    editingCodingId = item.id;
+    document.getElementById("codingTitle").value = item.title;
+    document.getElementById("codingExamCode").value = item.examCode;
+    document.getElementById("codingDisclaimer").value = item.disclaimer || "";
+
+    const container = document.getElementById("codingBlocksContainer");
+    container.innerHTML = "";
+    codingBlockCounter = 0;
+
+    item.questions.forEach(q => addCodingBlock(q.language, q.code));
+    document.getElementById("codingDownloadBtn").style.display = "inline-block";
+    switchSubTab("coding", "create");
+}
+
+function deleteCodingHistoryItem(id){
+    if(!confirm("Delete this coding key from history?")) return;
+    const history = getHistory(CODING_STORAGE_KEY).filter(x => x.id !== id);
+    saveHistory(CODING_STORAGE_KEY, history);
+    if(editingCodingId === id) editingCodingId = null;
+    renderCodingHistory();
+}
+
+// Initialize with 1 coding question block
+addCodingBlock();
+
+
+// ==================== CRT KEY LOGIC ====================
+let crtTotalQuestions = 0;
+let editingCrtId = null;
+
+function generateCrtInputs(){
+    const count = parseInt(document.getElementById("crtQuestionCount").value);
+    if(!count || count <= 0){
+        alert("Enter valid question count");
+        return;
+    }
+    crtTotalQuestions = count;
+    renderCrtQuestions([]);
+    document.getElementById("crtCountGroup").style.display = "none";
+}
+
+function renderCrtQuestions(savedAnswers = []){
+    const container = document.getElementById("crtQuestionInputs");
+    container.style.display = "grid";
+    container.innerHTML = "";
+
+    for(let i = 1; i <= crtTotalQuestions; i++){
+        const div = document.createElement("div");
+        div.className = "option-card";
+        div.innerHTML = `
+            <button type="button" tabindex="-1" class="card-delete-btn" onclick="deleteCrtQuestion(${i})">✕</button>
+            <label>Q${i}</label>
+            <input type="text" maxlength="1" placeholder="A/B/C/D" class="crt-question-input" id="crt_q${i}" value="${escapeHTML(savedAnswers[i-1] || "")}">
+        `;
+        container.appendChild(div);
+    }
+
+    const addCard = document.createElement("div");
+    addCard.className = "add-card";
+    addCard.innerHTML = `
+        <div class="plus-icon">+</div>
+        <div class="add-text">Add Question</div>
+    `;
+    addCard.onclick = addCrtQuestion;
+    container.appendChild(addCard);
+
+    enableCrtTabNavigation();
+}
+
+function enableCrtTabNavigation(){
+    const inputs = document.querySelectorAll(".crt-question-input");
+    inputs.forEach((input, index) => {
+        input.addEventListener("keydown", function(e){
+            if(e.key === "Tab"){
+                e.preventDefault();
+                const next = inputs[index + 1];
+                if(next) next.focus();
+            }
+        });
+    });
+}
+
+function getAllCrtAnswers(){
+    const answers = [];
+    document.querySelectorAll(".crt-question-input").forEach(input => {
+        answers.push(input.value);
+    });
+    return answers;
+}
+
+function addCrtQuestion(){
+    const answers = getAllCrtAnswers();
+    crtTotalQuestions++;
+    renderCrtQuestions(answers);
+}
+
+function deleteCrtQuestion(index){
+    const answers = getAllCrtAnswers();
+    answers.splice(index - 1, 1);
+    crtTotalQuestions--;
+    if(crtTotalQuestions < 1) crtTotalQuestions = 1;
+    renderCrtQuestions(answers);
+}
+
+function buildCrtFullHTML(innerPreviewHTML, qrDataUrl){
+    let processedContent = innerPreviewHTML;
+    if(qrDataUrl){
+        processedContent = processedContent.replace(
+            /<div class="qr-wrapper">[\s\S]*?<\/div>/,
+            `<div class="qr-wrapper"><img src="${qrDataUrl}" width="90" height="90"></div>`
+        );
+    }
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Answer Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{ box-sizing:border-box; font-family:'Poppins',sans-serif; }
+body{ background:linear-gradient(135deg,#eff6ff,#f5f3ff); padding:24px; }
+.preview{ background:linear-gradient(135deg,#eff6ff,#f5f3ff); max-width:1050px; margin:auto; padding:28px; border-radius:24px; box-shadow:0 12px 35px rgba(37,99,235,0.12); }
+.sheet-header{ width:100%; text-align:center; margin-bottom:16px; }
+.sheet-title{ width:100%; text-align:center; font-size:30px; font-weight:700; background:linear-gradient(90deg,#2563eb,#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header-text{ width:100%; margin-top:6px; font-weight:600; color:#374151; text-align:center; }
+.qr-wrapper{ width:100%; display:flex; justify-content:center; margin:18px 0; }
+.note{ width:100%; text-align:center; background:linear-gradient(135deg,#eff6ff,#f5f3ff); color:#be123c; border:1px solid #fecdd3; padding:14px; border-radius:14px; margin:18px 0; font-size:13px; font-weight:600; word-wrap:break-word; overflow-wrap:break-word; }
+.answers-grid{ width:100%; display:grid; gap:14px; justify-content:center; }
+.answer-table{ border-collapse:collapse; margin:auto; overflow:hidden; border-radius:12px; background:white; box-shadow:0 5px 14px rgba(0,0,0,0.08); }
+.answer-table td{ border:1px solid #dbeafe; width:30px; height:22px; text-align:center; font-size:11px; font-weight:700; background:white; }
+.answer-table td:first-child{ background:#dbeafe; color:#1d4ed8; }
+</style>
+</head>
+<body>
+<div class="preview">
+${processedContent}
+</div>
+</body>
+</html>`;
+}
+
+function generateCrtSheet(){
+    const preview = document.getElementById("crtPreview");
+    const title = document.getElementById("crtTitle").value;
+    const examCode = document.getElementById("crtExamCode").value;
+    const note = document.getElementById("crtNote").value;
+
+    if(!title.trim()){
+        alert("Please enter title");
+        document.getElementById("crtTitle").focus();
+        return;
+    }
+    if(!examCode.trim()){
+        alert("Please enter exam code");
+        document.getElementById("crtExamCode").focus();
+        return;
+    }
+    if(crtTotalQuestions <= 0){
+        alert("Please generate question inputs first");
+        return;
+    }
+
+    const formattedDate = new Date().toLocaleDateString("en-GB");
+    const rawAnswers = [];
+    const answers = [];
+
+    for(let i = 1; i <= crtTotalQuestions; i++){
+        const inputEl = document.getElementById(`crt_q${i}`);
+        const value = inputEl ? inputEl.value.trim().toUpperCase() : "";
+        rawAnswers.push(value);
+        answers.push({ q: i, ans: value || "&nbsp;" });
+    }
+
+    const perColumn = 10;
+    const columns = Math.ceil(answers.length / perColumn);
+    let gridHTML = "";
+
+    for(let c = 0; c < columns; c++){
+        const start = c * perColumn;
+        const end = start + perColumn;
+        let rows = "";
+        for(let i = start; i < end && i < answers.length; i++){
+            rows += `<tr><td>${answers[i].q}</td><td>${answers[i].ans}</td></tr>`;
+        }
+        gridHTML += `<table class="answer-table"><tbody>${rows}</tbody></table>`;
+    }
+
+    preview.style.display = "block";
+    preview.innerHTML = `
+        <div class="sheet-header">
+            <div class="sheet-title">${escapeHTML(title)}</div>
+            <div class="header-text">Date : ${formattedDate}</div>
+            <div class="header-text">Exam Code : ${escapeHTML(examCode)}</div>
+        </div>
+        <div class="qr-wrapper"><div id="crtQrcode"></div></div>
+        ${note ? `<div class="note">${note}</div>` : ""}
+        <div class="answers-grid" style="grid-template-columns:repeat(${columns},auto)">
+            ${gridHTML}
+        </div>
+    `;
+
+    new QRCode(document.getElementById("crtQrcode"), {
+        text: examCode.trim(),
+        width: 90,
+        height: 90
+    });
+
+    // Wait briefly for QRCode canvas/img to render before saving HTML snapshot
+    setTimeout(() => {
+        const qrImg = preview.querySelector("#crtQrcode img");
+        const qrCanvas = preview.querySelector("#crtQrcode canvas");
+        const qrDataUrl = (qrImg && qrImg.src) ? qrImg.src : (qrCanvas ? qrCanvas.toDataURL() : "");
+        const fullHTML = buildCrtFullHTML(preview.innerHTML, qrDataUrl);
+
+        const history = getHistory(CRT_STORAGE_KEY);
+        const recordId = editingCrtId || Date.now().toString();
+        const existingIndex = history.findIndex(item => item.id === recordId);
+
+        const record = {
+            id: recordId,
+            examCode: examCode.trim(),
+            title: title.trim(),
+            note: note,
+            date: formattedDate,
+            answers: rawAnswers,
+            html: fullHTML
+        };
+
+        if(existingIndex >= 0){
+            history[existingIndex] = record;
+        } else {
+            history.unshift(record);
+        }
+
+        saveHistory(CRT_STORAGE_KEY, history);
+        editingCrtId = recordId;
+    }, 100);
+}
+
+function downloadCrtHTML(){
+    const preview = document.getElementById("crtPreview");
+    if(preview.innerHTML.trim() === ""){
+        alert("Generate answer sheet first");
+        return;
+    }
+
+    const qrImg = preview.querySelector("#crtQrcode img");
+    const qrCanvas = preview.querySelector("#crtQrcode canvas");
+    const qrDataUrl = (qrImg && qrImg.src) ? qrImg.src : (qrCanvas ? qrCanvas.toDataURL() : "");
+    const html = buildCrtFullHTML(preview.innerHTML, qrDataUrl);
+
+    const examCode = document.getElementById("crtExamCode").value.trim();
+    triggerFileDownload(examCode ? `${examCode}.html` : "question-paper.html", html);
+}
+
+function renderCrtHistory(){
+    const container = document.getElementById("crtHistoryList");
+    const history = getHistory(CRT_STORAGE_KEY);
+
+    if(history.length === 0){
+        container.innerHTML = `<div class="empty-history" style="grid-column:1/-1;">No CRT answer keys saved in history yet.</div>`;
+        return;
+    }
+
+    container.innerHTML = history.map(item => `
+        <div class="history-card">
+            <div>
+                <div class="history-exam-code">${escapeHTML(item.examCode)}</div>
+                <div class="history-date">${escapeHTML(item.date)}</div>
+                <div class="history-subtitle">${escapeHTML(item.title)} (${item.answers.length} Qs)</div>
+            </div>
+            <div class="history-actions">
+                <button class="hist-btn hist-view" onclick="viewCrtHistoryItem('${item.id}')">View</button>
+                <button class="hist-btn hist-edit" onclick="editCrtHistoryItem('${item.id}')">Edit</button>
+                <button class="hist-btn hist-del" onclick="deleteCrtHistoryItem('${item.id}')">Delete</button>
+            </div>
+        </div>
+    `).join("");
+}
+
+function viewCrtHistoryItem(id){
+    const item = getHistory(CRT_STORAGE_KEY).find(x => x.id === id);
+    if(item) openViewModal(item.examCode, item.html);
+}
+
+function editCrtHistoryItem(id){
+    const item = getHistory(CRT_STORAGE_KEY).find(x => x.id === id);
+    if(!item) return;
+
+    editingCrtId = item.id;
+    document.getElementById("crtTitle").value = item.title;
+    document.getElementById("crtExamCode").value = item.examCode;
+    document.getElementById("crtNote").value = item.note || "";
+
+    crtTotalQuestions = item.answers.length;
+    document.getElementById("crtCountGroup").style.display = "none";
+    document.getElementById("crtPreview").style.display = "none";
+    document.getElementById("crtPreview").innerHTML = "";
+
+    renderCrtQuestions(item.answers);
+    switchSubTab("crt", "create");
+}
+
+function deleteCrtHistoryItem(id){
+    if(!confirm("Delete this CRT key from history?")) return;
+    const history = getHistory(CRT_STORAGE_KEY).filter(x => x.id !== id);
+    saveHistory(CRT_STORAGE_KEY, history);
+    if(editingCrtId === id) editingCrtId = null;
+    renderCrtHistory();
+}
+</script>
+
+</body>
+</html>
